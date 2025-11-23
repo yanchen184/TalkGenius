@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22G120" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="UserEntity" representedClassName="UserEntity" syncable="YES">
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="displayName" optional="YES" attributeType="String"/>
+        <attribute name="email" attributeType="String"/>
+        <attribute name="isPremium" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="userId" attributeType="String"/>
+    </entity>
+    <entity name="ConversationEntity" representedClassName="ConversationEntity" syncable="YES">
+        <attribute name="conversationId" attributeType="String"/>
+        <attribute name="contextSnapshot" optional="YES" attributeType="String"/>
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="generatedReply" attributeType="String"/>
+        <attribute name="receivedMessage" attributeType="String"/>
+        <attribute name="toneStyle" attributeType="String"/>
+        <attribute name="userId" attributeType="String"/>
+    </entity>
+</model>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TalkGenius</string>
+    <string name="keyboard_name">TalkGenius AI Keyboard</string>
+    <string name="settings_title">TalkGenius Settings</string>
+
+    <!-- Auth strings -->
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="display_name">Display Name</string>
+    <string name="logout">Logout</string>
+
+    <!-- Dashboard strings -->
+    <string name="enable_keyboard">Enable Keyboard</string>
+    <string name="welcome_message">Welcome to TalkGenius!</string>
+    <string name="enable_keyboard_message">Enable the keyboard in system settings to start using AI-powered reply suggestions.</string>
+
+    <!-- Keyboard strings -->
+    <string name="generating_reply">Generating AI reply...</string>
+    <string name="reply_generated">Reply generated!</string>
+    <string name="error_occurred">Error occurred</string>
+
+    <!-- Tone styles -->
+    <string name="tone_humorous">Humorous</string>
+    <string name="tone_high_eq">High EQ</string>
+    <string name="tone_gentle">Gentle</string>
+    <string name="tone_cute">Cute</string>
+    <string name="tone_romantic">Romantic</string>
+    <string name="tone_professional">Professional</string>
+    <string name="tone_direct">Direct</string>
+    <string name="tone_flirty">Flirty</string>
+</resources>

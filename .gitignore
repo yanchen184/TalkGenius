@@ -1,5 +1,44 @@
+# Python
 venv
 venv_linux
 __pycache__
 .ruff_cache
 .pytest_cache
+*.pyc
+*.pyo
+*.egg-info
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+docker/.env
+
+# Docker
+docker/logs/
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+target/
+build/
+dist/
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Credentials
+credentials.json
+token.json
+*.pem
+*.key

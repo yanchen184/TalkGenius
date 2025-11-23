@@ -1,0 +1,226 @@
+package com.talkgenius.service;
+
+import com.talkgenius.dto.ai.GenerateReplyRequest;
+import com.talkgenius.dto.ai.GenerateReplyResponse;
+import com.talkgenius.exception.RateLimitExceededException;
+import com.talkgenius.model.AIUsageLog;
+import com.talkgenius.model.Conversation;
+import com.talkgenius.model.User;
+import com.talkgenius.repository.AIUsageLogRepository;
+import com.talkgenius.repository.ConversationRepository;
+import com.talkgenius.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.memory.InMemoryChatMemory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * AI Reply Generation Service.
+ *
+ * <p>Generates AI-powered reply suggestions with 8 different tone styles.
+ * Integrates with OpenAI GPT-4 via Spring AI.
+ *
+ * @author TalkGenius Team
+ * @since 2025-01-14
+ */
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class AIReplyService {
+
+private final ChatClient.Builder chatClientBuilder;
+    private final ConversationRepository conversationRepository;
+    private final AIUsageLogRepository usageLogRepository;
+    private final UserRepository userRepository;
+    private final SubscriptionService subscriptionService;
+
+    @Value("${app.freemium.daily-limit:10}")
+    private int freemiumDailyLimit;
+
+    /**
+     * Tone style system prompts.
+     */
+    private static final Map<Conversation.ToneStyle, String> TONE_PROMPTS = new HashMap<>() {{
+        put(Conversation.ToneStyle.Humorous,
+                "You are a witty dating assistant. Generate a funny, playful reply that makes the conversation light and enjoyable. " +
+                "Use humor appropriately without being offensive. Keep it flirty but respectful.");
+
+        put(Conversation.ToneStyle.High_EQ,
+                "You are an emotionally intelligent dating assistant. Generate a reply that shows empathy, active listening, " +
+                "and emotional awareness. Respond thoughtfully to the emotional undertones in the message.");
+
+        put(Conversation.ToneStyle.Gentle,
+                "You are a kind and gentle dating assistant. Generate a soft, warm reply that makes the other person feel " +
+                "comfortable and valued. Use gentle language and show genuine interest.");
+
+        put(Conversation.ToneStyle.Cute,
+                "You are a sweet and adorable dating assistant. Generate a cute, endearing reply with light playfulness. " +
+                "You may use appropriate emojis (1-2 max) to add charm. Keep it sweet and genuine.");
+
+        put(Conversation.ToneStyle.Romantic,
+                "You are a romantic dating assistant. Generate a heartfelt, romantic reply that expresses genuine interest " +
+                "and creates an emotional connection. Be sincere and charming without being over-the-top.");
+
+        put(Conversation.ToneStyle.Professional,
+                "You are a professional dating assistant. Generate a polite, respectful reply that maintains appropriate " +
+                "boundaries while still showing interest. Use proper grammar and courteous language.");
+
+        put(Conversation.ToneStyle.Direct,
+                "You are a straightforward dating assistant. Generate a clear, honest reply that gets to the point. " +
+                "Be direct but not rude. Show confidence and authenticity.");
+
+        put(Conversation.ToneStyle.Flirty,
+                "You are a flirtatious dating assistant. Generate a playfully flirty reply that creates romantic tension. " +
+                "Be charming and confident, with subtle innuendo. Keep it fun and exciting while respecting boundaries.");
+    }};
+
+    /**
+     * Generate AI reply with specified tone style.
+     *
+     * @param userId User ID
+     * @param request Generation request
+     * @return Generated reply response
+     * @throws RateLimitExceededException if daily limit exceeded
+     */
+    @Transactional
+    public GenerateReplyResponse generateReply(String userId, GenerateReplyRequest request) {
+        log.info("Generating AI reply for user: {}, tone: {}", userId, request.getToneStyle());
+
+        // Get user
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Check rate limits for free users
+        if (!user.getIsPremium()) {
+            checkRateLimit(userId);
+        }
+
+        // Determine tone style (use user preference if not specified)
+        Conversation.ToneStyle toneStyle = request.getToneStyle() != null
+                ? request.getToneStyle()
+                : Conversation.ToneStyle.High_EQ; // Default
+
+        // Generate reply using AI
+        String generatedReply = generateReplyWithAIReal(request.getReceivedMessage(), toneStyle, request.getConversationContext());
+
+        // Save conversation history
+        Conversation conversation = Conversation.builder()
+                .user(user)
+                .matchName(request.getMatchName())
+                .sourceApp(request.getSourceApp())
+                .receivedMessage(request.getReceivedMessage())
+                .generatedReply(generatedReply)
+                .toneStyle(toneStyle)
+                .build();
+        conversation = conversationRepository.save(conversation);
+
+        // Log AI usage
+        logAIUsage(user, "generate_reply", 0, true); // Token count would come from actual API response
+
+        log.info("Reply generated successfully. Conversation ID: {}", conversation.getId());
+
+        return GenerateReplyResponse.builder()
+                .conversationId(conversation.getId())
+                .generatedReply(generatedReply)
+                .toneStyle(toneStyle)
+                .tokensUsed(0) // Placeholder
+                .build();
+    }
+
+    /**
+     * Generate reply using OpenAI via Spring AI.
+     *
+     * TODO: Implement actual OpenAI integration when Spring AI version is upgraded
+     *
+     * @param receivedMessage The message received from match
+     * @param toneStyle Desired tone style
+     * @param context Optional conversation context
+     * @return Generated reply
+     */
+    private String generateReplyWithAI(String receivedMessage, Conversation.ToneStyle toneStyle, String context) {
+        // Temporary mock implementation until Spring AI is properly configured
+        log.warn("Using mock AI reply generation. Please configure Spring AI properly.");
+
+        String reply = String.format(
+                "Thanks for your message! I appreciate you reaching out. (Mock %s response to: '%s')",
+                toneStyle.name(),
+                receivedMessage.length() > 50 ? receivedMessage.substring(0, 50) + "..." : receivedMessage
+        );
+
+        log.debug("Mock AI generated reply: {}", reply);
+        return reply;
+    }
+    private String generateReplyWithAIReal(String receivedMessage, Conversation.ToneStyle toneStyle, String context) {
+        String systemPrompt = TONE_PROMPTS.get(toneStyle);
+
+        String userPrompt = String.format(
+                "The person you're interested in sent you this message: \"%s\"\n\n" +
+                        (context != null ? "Previous conversation context:\n" + context + "\n\n" : "") +
+                        "Generate a thoughtful reply that matches the requested tone. " +
+                        "Keep the reply concise (2-3 sentences max). Make it natural and conversational.",
+                receivedMessage
+        );
+
+        ChatClient chatClient = chatClientBuilder.build();
+
+        String reply = chatClient.prompt()
+                .system(systemPrompt)
+                .user(userPrompt)
+                .call()
+                .content();
+
+        log.debug("AI generated reply: {}", reply);
+        return reply;
+    }
+    /**
+     * Check if user has exceeded daily rate limit.
+     *
+     * @param userId User ID
+     * @throws RateLimitExceededException if limit exceeded
+     */
+    private void checkRateLimit(String userId) {
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfDay = LocalDate.now().atTime(LocalTime.MAX);
+
+        long requestsToday = usageLogRepository.countByUserIdAndDateRange(userId, startOfDay, endOfDay);
+
+        if (requestsToday >= freemiumDailyLimit) {
+            log.warn("Rate limit exceeded for user: {}. Requests today: {}", userId, requestsToday);
+            throw new RateLimitExceededException(
+                    String.format("Daily limit of %d requests exceeded. Upgrade to premium for unlimited access.", freemiumDailyLimit)
+            );
+        }
+
+        log.debug("Rate limit check passed. User {} has made {} requests today", userId, requestsToday);
+    }
+
+    /**
+     * Log AI usage for analytics and rate limiting.
+     *
+     * @param user User
+     * @param operationType Operation type
+     * @param tokensUsed Tokens used
+     * @param success Whether the operation was successful
+     */
+    private void logAIUsage(User user, String operationType, int tokensUsed, boolean success) {
+        AIUsageLog log = AIUsageLog.builder()
+                .user(user)
+                .operationType(operationType)
+                .tokensUsed(tokensUsed)
+                .modelUsed("gpt-4o-mini") // From config
+                .success(success)
+                .build();
+        usageLogRepository.save(log);
+    }
+}
