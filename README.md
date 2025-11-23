@@ -1,296 +1,262 @@
-# Context Engineering Template
+# 🎮 TalkGenius - AI Dating Assistant Keyboard App
 
-A comprehensive template for getting started with Context Engineering - the discipline of engineering context for AI coding assistants so they have the information necessary to get the job done end to end.
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.1-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![React](https://img.shields.io/badge/React-19-blue.svg)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue.svg)](https://www.typescriptlang.org/)
+[![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o--mini-412991.svg)](https://openai.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> **Context Engineering is 10x better than prompt engineering and 100x better than vibe coding.**
+> 一個完整的全端 AI 約會助手平台，提供 8 種語氣風格的智能回覆生成，支持 Android 和 iOS 鍵盤整合。
 
-## 🚀 Quick Start
+## ✨ 主要特色
 
+### 🤖 AI 智能回覆
+- **8 種語氣風格**: Humorous, High_EQ, Gentle, Cute, Romantic, Professional, Direct, Flirty
+- **真實 OpenAI 整合**: 使用 GPT-4o-mini 模型生成自然對話
+- **即時生成**: 毫秒級響應時間
+- **上下文感知**: 支持對話歷史和情境分析
+
+### 🏗️ 技術架構
+- **後端**: Spring Boot 3.2.1 + Spring AI + MySQL + Redis
+- **前端**: React 19 + TypeScript + Vite + Tailwind CSS
+- **移動端**: Android (Jetpack Compose) + iOS (SwiftUI) 鍵盤 App
+- **容器化**: Docker Compose 完整編排
+
+### 🔒 安全性
+- JWT 認證系統
+- 用戶配額管理（免費/Premium）
+- OpenAI API Key 安全管理
+- SQL 注入防護
+
+## 🚀 快速開始
+
+### 前置需求
+- Docker & Docker Compose
+- Node.js 22.12.0 LTS
+- JDK 21
+- Git
+
+### 安裝步驟
+
+1. **Clone 儲存庫**
 ```bash
-# 1. Clone this template
-git clone https://github.com/coleam00/Context-Engineering-Intro.git
-cd Context-Engineering-Intro
-
-# 2. Set up your project rules (optional - template provided)
-# Edit CLAUDE.md to add your project-specific guidelines
-
-# 3. Add examples (highly recommended)
-# Place relevant code examples in the examples/ folder
-
-# 4. Create your initial feature request
-# Edit INITIAL.md with your feature requirements
-
-# 5. Generate a comprehensive PRP (Product Requirements Prompt)
-# In Claude Code, run:
-/generate-prp INITIAL.md
-
-# 6. Execute the PRP to implement your feature
-# In Claude Code, run:
-/execute-prp PRPs/your-feature-name.md
+git clone https://github.com/yanchen184/TalkGenius.git
+cd TalkGenius
 ```
 
-## 📚 Table of Contents
-
-- [What is Context Engineering?](#what-is-context-engineering)
-- [Template Structure](#template-structure)
-- [Step-by-Step Guide](#step-by-step-guide)
-- [Writing Effective INITIAL.md Files](#writing-effective-initialmd-files)
-- [The PRP Workflow](#the-prp-workflow)
-- [Using Examples Effectively](#using-examples-effectively)
-- [Best Practices](#best-practices)
-
-## What is Context Engineering?
-
-Context Engineering represents a paradigm shift from traditional prompt engineering:
-
-### Prompt Engineering vs Context Engineering
-
-**Prompt Engineering:**
-- Focuses on clever wording and specific phrasing
-- Limited to how you phrase a task
-- Like giving someone a sticky note
-
-**Context Engineering:**
-- A complete system for providing comprehensive context
-- Includes documentation, examples, rules, patterns, and validation
-- Like writing a full screenplay with all the details
-
-### Why Context Engineering Matters
-
-1. **Reduces AI Failures**: Most agent failures aren't model failures - they're context failures
-2. **Ensures Consistency**: AI follows your project patterns and conventions
-3. **Enables Complex Features**: AI can handle multi-step implementations with proper context
-4. **Self-Correcting**: Validation loops allow AI to fix its own mistakes
-
-## Template Structure
-
-```
-context-engineering-intro/
-├── .claude/
-│   ├── commands/
-│   │   ├── generate-prp.md    # Generates comprehensive PRPs
-│   │   └── execute-prp.md     # Executes PRPs to implement features
-│   └── settings.local.json    # Claude Code permissions
-├── PRPs/
-│   ├── templates/
-│   │   └── prp_base.md       # Base template for PRPs
-│   └── EXAMPLE_multi_agent_prp.md  # Example of a complete PRP
-├── examples/                  # Your code examples (critical!)
-├── CLAUDE.md                 # Global rules for AI assistant
-├── INITIAL.md               # Template for feature requests
-├── INITIAL_EXAMPLE.md       # Example feature request
-└── README.md                # This file
-```
-
-This template doesn't focus on RAG and tools with context engineering because I have a LOT more in store for that soon. ;)
-
-## Step-by-Step Guide
-
-### 1. Set Up Global Rules (CLAUDE.md)
-
-The `CLAUDE.md` file contains project-wide rules that the AI assistant will follow in every conversation. The template includes:
-
-- **Project awareness**: Reading planning docs, checking tasks
-- **Code structure**: File size limits, module organization
-- **Testing requirements**: Unit test patterns, coverage expectations
-- **Style conventions**: Language preferences, formatting rules
-- **Documentation standards**: Docstring formats, commenting practices
-
-**You can use the provided template as-is or customize it for your project.**
-
-### 2. Create Your Initial Feature Request
-
-Edit `INITIAL.md` to describe what you want to build:
-
-```markdown
-## FEATURE:
-[Describe what you want to build - be specific about functionality and requirements]
-
-## EXAMPLES:
-[List any example files in the examples/ folder and explain how they should be used]
-
-## DOCUMENTATION:
-[Include links to relevant documentation, APIs, or MCP server resources]
-
-## OTHER CONSIDERATIONS:
-[Mention any gotchas, specific requirements, or things AI assistants commonly miss]
-```
-
-**See `INITIAL_EXAMPLE.md` for a complete example.**
-
-### 3. Generate the PRP
-
-PRPs (Product Requirements Prompts) are comprehensive implementation blueprints that include:
-
-- Complete context and documentation
-- Implementation steps with validation
-- Error handling patterns
-- Test requirements
-
-They are similar to PRDs (Product Requirements Documents) but are crafted more specifically to instruct an AI coding assistant.
-
-Run in Claude Code:
+2. **設定環境變數**
 ```bash
-/generate-prp INITIAL.md
+cd docker
+cp .env.example .env
+# 編輯 .env 並填入你的 OpenAI API Key
 ```
 
-**Note:** The slash commands are custom commands defined in `.claude/commands/`. You can view their implementation:
-- `.claude/commands/generate-prp.md` - See how it researches and creates PRPs
-- `.claude/commands/execute-prp.md` - See how it implements features from PRPs
-
-The `$ARGUMENTS` variable in these commands receives whatever you pass after the command name (e.g., `INITIAL.md` or `PRPs/your-feature.md`).
-
-This command will:
-1. Read your feature request
-2. Research the codebase for patterns
-3. Search for relevant documentation
-4. Create a comprehensive PRP in `PRPs/your-feature-name.md`
-
-### 4. Execute the PRP
-
-Once generated, execute the PRP to implement your feature:
-
+3. **啟動服務**
 ```bash
-/execute-prp PRPs/your-feature-name.md
+docker-compose up -d
 ```
 
-The AI coding assistant will:
-1. Read all context from the PRP
-2. Create a detailed implementation plan
-3. Execute each step with validation
-4. Run tests and fix any issues
-5. Ensure all success criteria are met
-
-## Writing Effective INITIAL.md Files
-
-### Key Sections Explained
-
-**FEATURE**: Be specific and comprehensive
-- ❌ "Build a web scraper"
-- ✅ "Build an async web scraper using BeautifulSoup that extracts product data from e-commerce sites, handles rate limiting, and stores results in PostgreSQL"
-
-**EXAMPLES**: Leverage the examples/ folder
-- Place relevant code patterns in `examples/`
-- Reference specific files and patterns to follow
-- Explain what aspects should be mimicked
-
-**DOCUMENTATION**: Include all relevant resources
-- API documentation URLs
-- Library guides
-- MCP server documentation
-- Database schemas
-
-**OTHER CONSIDERATIONS**: Capture important details
-- Authentication requirements
-- Rate limits or quotas
-- Common pitfalls
-- Performance requirements
-
-## The PRP Workflow
-
-### How /generate-prp Works
-
-The command follows this process:
-
-1. **Research Phase**
-   - Analyzes your codebase for patterns
-   - Searches for similar implementations
-   - Identifies conventions to follow
-
-2. **Documentation Gathering**
-   - Fetches relevant API docs
-   - Includes library documentation
-   - Adds gotchas and quirks
-
-3. **Blueprint Creation**
-   - Creates step-by-step implementation plan
-   - Includes validation gates
-   - Adds test requirements
-
-4. **Quality Check**
-   - Scores confidence level (1-10)
-   - Ensures all context is included
-
-### How /execute-prp Works
-
-1. **Load Context**: Reads the entire PRP
-2. **Plan**: Creates detailed task list using TodoWrite
-3. **Execute**: Implements each component
-4. **Validate**: Runs tests and linting
-5. **Iterate**: Fixes any issues found
-6. **Complete**: Ensures all requirements met
-
-See `PRPs/EXAMPLE_multi_agent_prp.md` for a complete example of what gets generated.
-
-## Using Examples Effectively
-
-The `examples/` folder is **critical** for success. AI coding assistants perform much better when they can see patterns to follow.
-
-### What to Include in Examples
-
-1. **Code Structure Patterns**
-   - How you organize modules
-   - Import conventions
-   - Class/function patterns
-
-2. **Testing Patterns**
-   - Test file structure
-   - Mocking approaches
-   - Assertion styles
-
-3. **Integration Patterns**
-   - API client implementations
-   - Database connections
-   - Authentication flows
-
-4. **CLI Patterns**
-   - Argument parsing
-   - Output formatting
-   - Error handling
-
-### Example Structure
-
-```
-examples/
-├── README.md           # Explains what each example demonstrates
-├── cli.py             # CLI implementation pattern
-├── agent/             # Agent architecture patterns
-│   ├── agent.py      # Agent creation pattern
-│   ├── tools.py      # Tool implementation pattern
-│   └── providers.py  # Multi-provider pattern
-└── tests/            # Testing patterns
-    ├── test_agent.py # Unit test patterns
-    └── conftest.py   # Pytest configuration
+4. **啟動前端 UI**
+```bash
+cd ../api-test-ui
+npm install
+npm run dev
 ```
 
-## Best Practices
+5. **訪問應用**
+- Backend API: http://localhost:8080
+- Frontend UI: http://localhost:3001
+- API Documentation: http://localhost:8080/swagger-ui.html
 
-### 1. Be Explicit in INITIAL.md
-- Don't assume the AI knows your preferences
-- Include specific requirements and constraints
-- Reference examples liberally
+## 📊 系統架構
 
-### 2. Provide Comprehensive Examples
-- More examples = better implementations
-- Show both what to do AND what not to do
-- Include error handling patterns
+```
+┌─────────────────────────────────────────────────────────┐
+│                     Mobile Apps                         │
+│  ┌──────────────┐              ┌──────────────┐        │
+│  │   Android    │              │     iOS      │        │
+│  │   Keyboard   │              │   Keyboard   │        │
+│  └──────┬───────┘              └──────┬───────┘        │
+│         │                              │                │
+└─────────┼──────────────────────────────┼────────────────┘
+          │                              │
+          └──────────────┬───────────────┘
+                         │
+          ┌──────────────▼───────────────┐
+          │      Spring Boot Backend     │
+          │    (OpenAI + Spring AI)      │
+          └──────┬────────────────┬──────┘
+                 │                │
+     ┌───────────▼──┐      ┌─────▼─────┐
+     │   MySQL 8.0  │      │  Redis 7  │
+     └──────────────┘      └───────────┘
+```
 
-### 3. Use Validation Gates
-- PRPs include test commands that must pass
-- AI will iterate until all validations succeed
-- This ensures working code on first try
+## 🎯 支援的語氣風格
 
-### 4. Leverage Documentation
-- Include official API docs
-- Add MCP server resources
-- Reference specific documentation sections
+| 語氣 | 描述 | 適用場景 |
+|-----|------|---------|
+| 😄 Humorous | 幽默風趣 | 輕鬆聊天 |
+| 🧠 High_EQ | 高情商 | 深入交流 |
+| 💕 Gentle | 溫柔體貼 | 關心安慰 |
+| 🥰 Cute | 可愛俏皮 | 甜蜜互動 |
+| 💖 Romantic | 浪漫深情 | 表達愛意 |
+| 👔 Professional | 專業禮貌 | 正式溝通 |
+| 💬 Direct | 直接坦率 | 明確表達 |
+| 💋 Flirty | 魅力撩人 | 調情互動 |
 
-### 5. Customize CLAUDE.md
-- Add your conventions
-- Include project-specific rules
-- Define coding standards
+## 🧪 API 測試
 
-## Resources
+### 使用前端 UI (推薦)
+1. 訪問 http://localhost:3001
+2. 在 **Auth** 頁籤註冊/登入
+3. 在 **AI Test** 頁籤測試 AI 回覆生成
 
-- [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code)
-- [Context Engineering Best Practices](https://www.philschmid.de/context-engineering)
+### 使用 cURL
+```bash
+# 註冊
+curl -X POST http://localhost:8080/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@example.com",
+    "password": "password123",
+    "displayName": "Test User"
+  }'
+
+# 登入
+TOKEN=$(curl -X POST http://localhost:8080/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@example.com",
+    "password": "password123"
+  }' | jq -r '.token')
+
+# 生成 AI 回覆
+curl -X POST http://localhost:8080/api/v1/ai/generate-reply \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "receivedMessage": "Hey, how was your day?",
+    "toneStyle": "Humorous",
+    "matchName": "Alice"
+  }'
+```
+
+## 📁 專案結構
+
+```
+TalkGenius/
+├── backend/                 # Spring Boot 後端
+│   ├── src/main/java/
+│   │   └── com/talkgenius/
+│   │       ├── controller/  # REST API 控制器
+│   │       ├── service/     # 業務邏輯
+│   │       ├── model/       # JPA 實體
+│   │       └── security/    # JWT 認證
+│   └── pom.xml
+├── api-test-ui/            # React 測試 UI
+│   ├── src/
+│   │   ├── components/     # React 組件
+│   │   └── App.tsx
+│   └── package.json
+├── android/                # Android 鍵盤 App
+│   └── app/src/main/
+├── ios/                    # iOS 鍵盤 App
+│   └── TalkGenius/
+└── docker/                 # Docker 配置
+    ├── docker-compose.yml
+    └── mysql/init.sql
+```
+
+## 🔧 配置說明
+
+### 環境變數 (.env)
+```bash
+# OpenAI API
+OPENAI_API_KEY=sk-proj-YOUR_OPENAI_API_KEY_HERE
+
+# MySQL
+MYSQL_ROOT_PASSWORD=your_root_password
+MYSQL_USER=talkgenius
+MYSQL_PASSWORD=your_password
+MYSQL_DATABASE=talkgenius
+
+# JWT Secret
+JWT_SECRET=your-jwt-secret-key-minimum-32-chars
+```
+
+### Spring AI 配置 (application.yml)
+```yaml
+spring:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.7
+          max-tokens: 500
+```
+
+## 📚 文件
+
+- [OpenAI 整合指南](OPENAI_ENABLED.md) - 完整的 OpenAI 設定說明
+- [修復記錄](FIXES_APPLIED.md) - 詳細的問題修復歷程
+- [測試指南](TESTING_GUIDE.md) - 測試流程和方法
+- [前端啟動指南](api-test-ui/START.md) - React UI 設置
+
+## 🛠️ 開發工具
+
+- **IDE**: IntelliJ IDEA / VS Code
+- **API 測試**: Postman / Thunder Client
+- **資料庫**: MySQL Workbench / DBeaver
+- **容器**: Docker Desktop
+
+## 🎯 Roadmap
+
+- [x] Spring Boot 後端 API
+- [x] OpenAI GPT-4o-mini 整合
+- [x] React 測試 UI
+- [x] JWT 認證系統
+- [x] 8 種語氣風格
+- [ ] Android 鍵盤完整實作
+- [ ] iOS 鍵盤完整實作
+- [ ] 情緒分析功能
+- [ ] 對話歷史管理
+- [ ] Premium 訂閱系統
+- [ ] 多語言支持
+
+## 💰 成本估算
+
+使用 OpenAI GPT-4o-mini:
+- **價格**: $0.150 / 1M input tokens, $0.600 / 1M output tokens
+- **單次請求**: 約 100-200 tokens
+- **預估成本**: 每 1000 次請求 ≈ $0.10-0.20 USD
+
+## 🤝 貢獻
+
+歡迎提交 Issue 和 Pull Request！
+
+## 📄 授權
+
+MIT License - 詳見 [LICENSE](LICENSE)
+
+## 👨‍💻 作者
+
+**Bob Chen**
+- Email: bobchen184@gmail.com
+- GitHub: [@yanchen184](https://github.com/yanchen184)
+- Portfolio: https://yanchen184.github.io/game-portal
+
+## 🙏 致謝
+
+- [Spring AI](https://spring.io/projects/spring-ai) - Spring Framework 的 AI 整合
+- [OpenAI](https://openai.com/) - GPT-4o-mini API
+- [React](https://reactjs.org/) - 前端框架
+- [Tailwind CSS](https://tailwindcss.com/) - CSS 框架
+
+---
+
+**🤖 Generated with [Claude Code](https://claude.com/claude-code)**
+
+**Co-Authored-By: Claude <noreply@anthropic.com>**
